@@ -29,7 +29,7 @@ export const deleteVideo=async(req,res,next)=>{
         if(!video) return next(createError(404,"Video not found"));
         if(video.userId!==req.user.id) return next(createError(401,"You are not authenticated to delete this video"));
         await Video.findByIdAndDelete(req.params.id);
-        res.status(200).json("Video has been delted");
+        res.status(200).json("Video has been deleted");
       }catch(err){
         next(err);
       }
@@ -63,7 +63,7 @@ export const randomVideos=async(req,res,next)=>{
 }
 export const trendVideos=async(req,res,next)=>{
     try{
-        const videos=await Video.sort({views:-1});
+        const videos=await Video.find().sort({views:-1});
         res.status(200).json(videos);
    }catch(err){
      next(err);
@@ -74,14 +74,34 @@ export const subscribedVideos=async(req,res,next)=>{
     try{
      const user=await User.findById(req.user.id);
      const subChenals=user.subscribedUsers;
-     const Videos=Promise.all(
+     const Videos=await Promise.all(
         subChenals.map((chenalId)=>{
-            return Video.findById({userId:chenalId});
+            return Video.find({userId:chenalId});
         })
      );
-     res.status(200).json(Videos);
+     res.status(200).json(Videos.flat().sort((a,b)=> b.createdAt-a.createdAt));
    }catch(err){
      next(err);
    }
+
+}
+export const GetVideosByTag=async(req,res,next)=>{
+  const tags=req.query.tags.split(",");
+  try{
+      const videos=await Video.find({tags:{$in:tags}});
+      res.status(200).json(videos);
+ }catch(err){
+   next(err);
+ }
+
+}
+export const GetVideosBySearch=async(req,res,next)=>{
+  const q=req.query.q;
+  try{
+      const videos=await Video.find({title:{$regex:q,$options:"i"}});
+      res.status(200).json(videos);
+ }catch(err){
+   next(err);
+ }
 
 }
