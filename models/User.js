@@ -12,7 +12,6 @@ const UserSchema=mongoose.Schema({
     },
     password:{
         type:String,
-        required:true
     },
     img:{
         type:String
@@ -23,6 +22,10 @@ const UserSchema=mongoose.Schema({
     },
     subscribedUsers:{
         type:[String]
+    },
+    fromGoogle:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true});
 export default mongoose.model("User",UserSchema);

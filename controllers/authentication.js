@@ -28,3 +28,23 @@ export const signin=async(req,res,next)=>{
        next(err);
     }
 }
+export const GoogleSignin=async(req,res,next)=>{
+    try{
+        const user=await User.findOne({email:req.body.email});
+        if(user){
+          const token = Jwt.sign({id:user._id},process.env.JWTKEY);
+           res.cookie("access_token",token,{
+            httpOnly:true
+        }).status(200).json(user._doc);
+        }else{
+            const newuser=new User({...req.body,fromGoogle:true});
+            const saveuser=await newuser.save();
+            const token = Jwt.sign({id:saveuser._id},process.env.JWTKEY);
+            res.cookie("access_token",token,{
+             httpOnly:true
+         }).status(200).json(saveuser._doc);
+        }
+    }catch(err){
+       next(err);
+    }
+}

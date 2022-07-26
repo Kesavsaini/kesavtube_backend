@@ -2,6 +2,7 @@ import Express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors"
 import authRoute from "./routes/auth.js"
 import userRoute from "./routes/users.js"
 import videoRoute from "./routes/videos.js"
@@ -9,6 +10,7 @@ import commentRoute from "./routes/comments.js"
 const app=new Express();
 dotenv.config();
 mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected")).catch((err)=>console.log(err));
+app.use(cors())
 app.use(Express.json());
 app.use(cookieParser())
 app.use("/api/auth",authRoute);
