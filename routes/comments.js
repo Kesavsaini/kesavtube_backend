@@ -7,5 +7,5 @@ router.post("/:id",VerifyToken,addComment)
 //delete a comment
 router.delete("/:CmntId",VerifyToken,deleteComment)
 //get all comments
-router.get("/:VideoId",getallComment)
+router.get("/:videoId",getallComment)
 export default router;

@@ -10,9 +10,9 @@ import commentRoute from "./routes/comments.js"
 const app=new Express();
 dotenv.config();
 mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected")).catch((err)=>console.log(err));
-app.use(cors())
+app.use(cookieParser());
 app.use(Express.json());
-app.use(cookieParser())
+app.use(cors())
 app.use("/api/auth",authRoute);
 app.use("/api/user",userRoute);
 app.use("/api/video",videoRoute);
